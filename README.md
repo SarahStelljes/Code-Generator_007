@@ -10,8 +10,8 @@ A password generater.
 * JavaScript
 
 ## Image
-
+![image](Password_Generater.JPG)
 ## Live Link
-
+https://sarahstelljes.github.io/Password-Generator_007/
 ## Contirbution
 JS made by Sarah E. Stelljes
