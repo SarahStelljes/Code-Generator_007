@@ -1,91 +1,131 @@
+var theSelected = "";
 var getCharacters = {
   lower: function(){
-    var getLower = window.prompt("Would you like to include lowercase letters in your password? Enter 'y' for yes or 'n' for no.");
-    getLower = getLower.toLowerCase();
+    var getLower = window.confirm("Would you like to include lowercase letters in your password?");
     
     switch(getLower){
-      case "y":
+      case true:
         return true;
-      case "n":
+      case false:
         return false;
       default:
-        window.alert("You need to enter a proper value! Please try again.");
+        window.alert("Something went wrong!");
         return getCharacters.lower();
     }
   },
   upper: function(){
-    var getUpper = window.prompt("Would you like to include uppercase letters in your password? Enter 'y' for yes or 'n' for no.");
-    getUpper = getUpper.toLowerCase();
+    var getUpper = window.confirm("Would you like to include uppercase letters in your password?");
     
     switch(getUpper){
-      case "y":
+      case true:
         return true;
-      case "n":
+      case false:
         return false;
       default:
-        window.alert("You need to enter a proper value! Please try again.");
+        window.alert("Something went wrong!");
         return getCharacters.upper();
     }
   },
   numeric: function(){
-    var getNumeric = window.prompt("Would you like to include numeric characters in your password? Enter 'y' for yes or 'n' for no.");
-    getNumeric = getNumeric.toLowerCase();
+    var getNumeric = window.confirm("Would you like to include numeric characters in your password?");
     
     switch(getNumeric){
-      case "y":
+      case true:
         return true;
-      case "n":
+      case false:
         return false;
       default:
-        window.alert("You need to enter a proper value! Please try again.");
+        window.alert("Something went wrong!");
         return getCharacters.numeric();
     }
   },
   special: function(){
-    var getSpecial = window.prompt("Would you like to include special characters in your password? Enter 'y' for yes or 'n' for no.");
-    getSpecial = getSpecial.toLowerCase();
+    var getSpecial = window.confirm("Would you like to include special characters in your password?");
     
-    switch(getLower){
-      case "y":
+    switch(getSpecial){
+      case true:
         return true;
-      case "n":
+      case false:
         return false;
       default:
-        window.alert("You need to enter a proper value! Please try again.");
+        window.alert("Something went wrong!");
         return getCharacters.special();
     }
   }
 };
-
-var randomFunc = {
-  lowerFunc: function(){
-    //generate a number from 97 to 122
-    return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
-  },
-  upperFunc: function(){
-    return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
-  },
-  numericFunc: function(){
-    return String.fromCharCode(Math.floor(Math.random() * 10) + 48);
-  },
-  specialFunc: function(){
-    const specailChars = "1@#$%^&*(){}[]=<>/,.";
-    return specailChars[Math.floor(Math.random()* specailChars.length)];
-  }
-}
+var characters = {
+  lowerChars: "abcdefghijklmnopqrstuvwxyz",
+  upperChars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  numericChars: "1234567890",
+  specialChars: "1@#$%^&*(){}[]=<>/,."
+};
+// var randomFunc = {
+//   lowerFunc: function(){
+//     var lowerChars = "abcdefghijklmnopqrstuvwxyz";
+//   },
+//   upperFunc: function(){
+//     return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+//   },
+//   numericFunc: function(){
+//     return String.fromCharCode(Math.floor(Math.random() * 10) + 48);
+//   },
+//   specialFunc: function(){
+//     const specailChars = "1@#$%^&*(){}[]=<>/,.";
+//     return specailChars[Math.floor(Math.random()* specailChars.length)];
+//   }
+// }
 
 var generatePassword = function(){
+  theSelected = "";
   var getLength = window.prompt("Choose a number between 8-128 for how long you want your password to be.");
-
-
+  var generatedPassword = "";
   getLength = parseInt(getLength);
+  if(getLength === "" || getLength === null){
+    return generatePassword();
+  }
 
-  if(getLength >= 8 || getLength <= 128){
+  if(getLength >= 8 && getLength <= 128){
+    var haveLower = getCharacters.lower();
+    var haveUpper = getCharacters.upper();
+    var haveNumeric = getCharacters.numeric();
+    var haveSpecial = getCharacters.special();
+    var requriements = haveLower + haveUpper + haveNumeric + haveSpecial;
+
+    if(requriements === 0){
+      window.alert("You need to choose at least one of the four options (lowercase, uppercase, numeric, or special) to generate a password! Please try again.");
+      return generatePassword();
+    }
+    if(haveLower){
+      theSelected = theSelected + characters.lowerChars;
+    }
+    if(haveUpper){
+      theSelected = theSelected + characters.upperChars;
+    }
+    if(haveNumeric){
+      theSelected = theSelected + characters.numericChars;
+    }
+    if(haveSpecial){
+      theSelected = theSelected + characters.specialChars;
+    }
+    while (generatedPassword.length < getLength){
+      var randomIndex = Math.floor(Math.random() * theSelected.length);
+      var randomChar = theSelected.charAt(randomIndex);
+      generatedPassword = generatedPassword + randomChar;
+    }
+  }
+  else if(getLength < 8){
+    window.alert("That number is too low! You need to enter a number 8-128");
+    return generatePassword();
+  }
+  else if(getLength > 128){
+    window.alert("That number is too high! You need to enter a number 8-128");
+    return generatePassword();
   }
   else {
     window.alert("You need to enter a valid number! Please try again.");
-    generatePassword();
+    return generatePassword();
   }
+  return generatedPassword
 };
 
 // Get references to the #generate element
@@ -96,7 +136,7 @@ function writePassword() {
   var password = generatePassword();
   var passwordText = document.querySelector("#password");
 
-  passwordText.value = password;
+  passwordText.textContent = password;
 
 }
 
